@@ -1,59 +1,48 @@
 package com.gorygon.springboot.controller;
 
-import java.util.List;
+import com.gorygon.springboot.model.Employee;
+import com.gorygon.springboot.service.IEmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.gorygon.springboot.model.Employee;
-import com.gorygon.springboot.repository.EmployeeRepository;
-import com.gorygon.springboot.service.IEmployeeService;
+import java.util.List;
 
 @RestController
-//@RequestMapping("/api")
+@RequestMapping("/api")
 public class EmployeeController {
 
-//	@Autowired
-//	IEmployeeService employeeService;
-	
 	@Autowired
-	EmployeeRepository repository;
-//	
-//	@PostMapping("/employees")
-//	public Employee createEmployee( @Valid @RequestBody Employee employee) {
-//		return employeeService.createEmployee(employee);
-//	}
-	
-	@RequestMapping("/employees")
-	public List<Employee> getAllEmployees(){
-		return repository.findAll();
+	IEmployeeService employeeService;
+
+	@PostMapping("/employees")
+	public Employee createEmployee(@Valid @RequestBody Employee employee) {
+		return employeeService.createEmployee(employee);
 	}
-	
-//	@GetMapping("/employees/{idEmployee}")
-//	public Employee getEmployeeById(@PathVariable(value = "idEmployee") Long idEmployee) {
-//		return null;
-//	}
-//	
-//	@PutMapping("/employees/{idEmployee}")
-//	public Employee updateEmployee(@PathVariable(value = "idEmployee") Long idEmployee,
-//			Employee employeee) {
-//		return employeeService.updateEmployee(idEmployee, employeee);
-//	}
-	
-//	@DeleteMapping("/employees/{idEmployee}")
-//	public ResponseEntity<?> deleteEmployee(@PathVariable(value = "idEmployee") Long idEmployee,
-//			Employee employee) {
-//		return employeeService.deleteEmployee(idEmployee, employee);
-//	}
-	
+
+	@RequestMapping("/employees")
+	public ResponseEntity<List<Employee>> getAllEmployees() {
+		return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
+	}
+
+	@GetMapping("/employees/{idEmployee}")
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable(value = "idEmployee") Long idEmployee) {
+		return new ResponseEntity<>(employeeService.getEmployeeById(idEmployee), HttpStatus.OK);
+	}
+
+	@PutMapping("/employees/{idEmployee}")
+	public ResponseEntity<Employee> updateEmployee(
+					@PathVariable(value = "idEmployee") Long idEmployee,
+					Employee employeee) {
+		return new ResponseEntity<>(employeeService.updateEmployee(idEmployee, employeee), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/employees/{idEmployee}")
+	public ResponseEntity<?> deleteEmployee(@PathVariable(value = "idEmployee") Long idEmployee,
+	                                        Employee employee) {
+		return employeeService.deleteEmployee(idEmployee, employee);
+	}
+
 }

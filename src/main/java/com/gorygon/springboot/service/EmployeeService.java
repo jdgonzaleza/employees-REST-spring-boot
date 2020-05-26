@@ -3,6 +3,7 @@ package com.gorygon.springboot.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.gorygon.springboot.exception.ResourceNotFoundException;
@@ -15,14 +16,17 @@ public class EmployeeService implements IEmployeeService {
 	EmployeeRepository employeeRepository;
 
 
+	@Override
 	public Employee getEmployeeById(Long idEmployee) {
 		return employeeRepository.getOne(idEmployee);
 	}
 
+	@Override
 	public Employee createEmployee(Employee employee) {
 		return employeeRepository.save(employee);
 	}
 
+	@Override
 	public Employee updateEmployee(Long idEmployee, Employee employee) {
 		
 		Employee thisEmployee = employeeRepository.findById(idEmployee)
@@ -38,19 +42,16 @@ public class EmployeeService implements IEmployeeService {
 
 	@Override
 	public List<Employee> getAllEmployees() {
-		// TODO Auto-generated method stub
-		System.out.println();
 		return employeeRepository.findAll();
 	}
 
 	@Override
 	public ResponseEntity<?> deleteEmployee(Long idEmployee, Employee employee) {
-		// TODO Auto-generated method stub
 		Employee thisEmployee = employeeRepository.findById(idEmployee)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee", "id", idEmployee));
 
 		employeeRepository.delete(thisEmployee);
-		return ResponseEntity.ok().build();
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
