@@ -1,4 +1,4 @@
-package com.gorygon.springboot.model;
+package com.gorygon.springboot.demoapi.model;
 
 import java.io.Serializable;
 

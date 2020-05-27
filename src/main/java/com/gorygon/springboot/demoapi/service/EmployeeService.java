@@ -1,15 +1,18 @@
-package com.gorygon.springboot.service;
+package com.gorygon.springboot.demoapi.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.gorygon.springboot.exception.ResourceNotFoundException;
-import com.gorygon.springboot.model.Employee;
-import com.gorygon.springboot.repository.EmployeeRepository;
+import com.gorygon.springboot.demoapi.exception.ResourceNotFoundException;
+import com.gorygon.springboot.demoapi.model.Employee;
+import com.gorygon.springboot.demoapi.repository.EmployeeRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EmployeeService implements IEmployeeService {
 
 	@Autowired
@@ -18,7 +21,8 @@ public class EmployeeService implements IEmployeeService {
 
 	@Override
 	public Employee getEmployeeById(Long idEmployee) {
-		return employeeRepository.getOne(idEmployee);
+		return employeeRepository.findById(idEmployee)
+						.orElseThrow(() -> new ResourceNotFoundException("Employee", "id", idEmployee));
 	}
 
 	@Override

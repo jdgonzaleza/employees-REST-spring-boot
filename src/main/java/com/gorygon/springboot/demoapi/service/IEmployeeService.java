@@ -1,10 +1,10 @@
-package com.gorygon.springboot.service;
+package com.gorygon.springboot.demoapi.service;
 
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import com.gorygon.springboot.model.Employee;
+import com.gorygon.springboot.demoapi.model.Employee;
 
 public interface IEmployeeService {
 	

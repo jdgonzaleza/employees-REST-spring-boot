@@ -1,4 +1,4 @@
-package com.gorygon.springboot.exception;
+package com.gorygon.springboot.demoapi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
