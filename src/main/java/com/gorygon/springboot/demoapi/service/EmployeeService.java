@@ -11,6 +11,7 @@ import com.gorygon.springboot.demoapi.exception.ResourceNotFoundException;
 import com.gorygon.springboot.demoapi.model.Employee;
 import com.gorygon.springboot.demoapi.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class EmployeeService implements IEmployeeService {
@@ -22,7 +23,8 @@ public class EmployeeService implements IEmployeeService {
 	@Override
 	public Employee getEmployeeById(Long idEmployee) {
 		return employeeRepository.findById(idEmployee)
-						.orElseThrow(() -> new ResourceNotFoundException("Employee", "id", idEmployee));
+						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id " +
+										idEmployee + " not found."));
 	}
 
 	@Override
@@ -34,7 +36,8 @@ public class EmployeeService implements IEmployeeService {
 	public Employee updateEmployee(Long idEmployee, Employee employee) {
 		
 		Employee thisEmployee = employeeRepository.findById(idEmployee)
-				.orElseThrow(() -> new ResourceNotFoundException("Employee", "id", idEmployee));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id " +
+								idEmployee + " not found."));
 
 		thisEmployee.setFirstName(employee.getFirstName());
 		thisEmployee.setEmail(employee.getEmail());
@@ -52,7 +55,8 @@ public class EmployeeService implements IEmployeeService {
 	@Override
 	public ResponseEntity<?> deleteEmployee(Long idEmployee, Employee employee) {
 		Employee thisEmployee = employeeRepository.findById(idEmployee)
-				.orElseThrow(() -> new ResourceNotFoundException("Employee", "id", idEmployee));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id " +
+								idEmployee + " not found."));
 
 		employeeRepository.delete(thisEmployee);
 		return new ResponseEntity<>(HttpStatus.OK);
