@@ -35,15 +35,12 @@ public class EmployeeService implements IEmployeeService {
 	@Override
 	public Employee updateEmployee(Long idEmployee, Employee employee) {
 		
-		Employee thisEmployee = employeeRepository.findById(idEmployee)
+		employeeRepository.findById(idEmployee)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id " +
 								idEmployee + " not found."));
+		employee.setId(idEmployee);
 
-		thisEmployee.setFirstName(employee.getFirstName());
-		thisEmployee.setEmail(employee.getEmail());
-		thisEmployee.setLastName(employee.getLastName());
-
-		return thisEmployee;
+		return employeeRepository.save(employee);
 	}
 
 

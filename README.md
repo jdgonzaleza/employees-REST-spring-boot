@@ -13,4 +13,4 @@ In this case, we decided to create an API that manages a companies Employees inf
 * REST tests and unit tests
 
 
-Made with love by ❤️ gorygon (jdgonzaleza😀)  
+Made with love by ❤️ gorygon - jdgonzaleza😀  

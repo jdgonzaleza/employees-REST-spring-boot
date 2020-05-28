@@ -1,4 +1,4 @@
-package com.gorygon.demoapi.demoapi;
+package com.gorygon.springboot.demoapi;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
