@@ -33,13 +33,12 @@ public class EmployeeController {
 	}
 
 	@PatchMapping("{idEmployee}")
-	public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "idEmployee") Long idEmployee, Employee employeee) {
+	public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "idEmployee") Long idEmployee, @RequestBody Employee employeee) {
 		return new ResponseEntity<>(employeeService.updateEmployee(idEmployee, employeee), HttpStatus.OK);
 	}
 
 	@DeleteMapping("{idEmployee}")
-	public ResponseEntity<?> deleteEmployee(@PathVariable(value = "idEmployee") Long idEmployee, Employee employee) {
-		return employeeService.deleteEmployee(idEmployee, employee);
+	public ResponseEntity<?> deleteEmployee(@PathVariable(value = "idEmployee") Long idEmployee) {
+		return employeeService.deleteEmployee(idEmployee);
 	}
-
 }

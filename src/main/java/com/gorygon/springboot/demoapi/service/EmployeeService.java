@@ -3,6 +3,7 @@ package com.gorygon.springboot.demoapi.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +36,10 @@ public class EmployeeService implements IEmployeeService {
 	@Override
 	public Employee updateEmployee(Long idEmployee, Employee employee) {
 		
-		employeeRepository.findById(idEmployee)
+		Employee dbEmployee = employeeRepository.findById(idEmployee)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id " +
 								idEmployee + " not found."));
-		employee.setId(idEmployee);
-
+		employee.mergeForUpdate(dbEmployee);
 		return employeeRepository.save(employee);
 	}
 
@@ -50,11 +50,10 @@ public class EmployeeService implements IEmployeeService {
 	}
 
 	@Override
-	public ResponseEntity<?> deleteEmployee(Long idEmployee, Employee employee) {
+	public ResponseEntity<?> deleteEmployee(Long idEmployee) {
 		Employee thisEmployee = employeeRepository.findById(idEmployee)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id " +
 								idEmployee + " not found."));
-
 		employeeRepository.delete(thisEmployee);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

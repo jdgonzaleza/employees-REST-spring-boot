@@ -3,29 +3,37 @@ package com.gorygon.springboot.demoapi.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.*;
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "employee")
-public class Employee  implements Serializable {
+public class Employee implements Serializable, GoryObject<Employee> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name="firstName")
+	@Column(name = "firstName")
 	private String firstName;
-	@Column(name="lastName")
+	@Column(name = "lastName")
 	private String lastName;
-	@Column(name="email")
+	@Column(name = "email")
 	private String email;
+
+	@Override
+	public Employee mergeForUpdate(Employee dbObject) {
+		if (id == null)
+			id = dbObject.getId();
+		if (firstName == null)
+			firstName = dbObject.getFirstName();
+		if (lastName == null)
+			lastName = dbObject.getLastName();
+		if (email == null)
+			email = dbObject.getEmail();
+		return this;
+	}
 }

@@ -5,22 +5,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gorygon.springboot.demoapi.controller.EmployeeController;
 import com.gorygon.springboot.demoapi.model.Employee;
 import com.gorygon.springboot.demoapi.service.IEmployeeService;
+import org.apache.catalina.connector.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.http.server.reactive.MockServerHttpResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,12 +45,12 @@ public class EmployeeControllerTest {
 
 	@Before
 	public void setup() throws JsonProcessingException {
-		employee = new Employee(Long.getLong("10"), "Lio", "Messi", "lio@messi.com");
-		employeeList = Arrays.asList( new Employee(Long.getLong("1"),"Juan", "Gonzalez", "juan@gonzalez.com"),
-						new Employee(Long.getLong("2"), "Diego", "Arteta", "Diego@arteta.com"));
+		employee = new Employee(10L, "Lio", "Messi", "lio@messi.com");
+		employeeList = Arrays.asList( new Employee(1L,"Juan", "Gonzalez", "juan@gonzalez.com"),
+						new Employee(2L, "Diego", "Arteta", "Diego@arteta.com"));
 		serviceUri = "/api/employees/";
 		jsonEmployeeList = mapper.writeValueAsString(employeeList);
-		jsonEmployee = mapper.writeValueAsString(jsonEmployee);
+		jsonEmployee = mapper.writeValueAsString(employee);
 	}
 
 	@Test
@@ -63,25 +66,53 @@ public class EmployeeControllerTest {
 
 	@Test
 	public void getEmployeeById() throws Exception {
-		Mockito.when(service.getEmployeeById(Long.getLong("10"))).thenReturn(employeeList.get(0));
+		Mockito.when(service.getEmployeeById(10L)).thenReturn(employee);
 
-		mockMvc.perform(get(serviceUri + "10/"))
+		mockMvc.perform(get(serviceUri + "{idEmployee}", 10L))
 						.andExpect(content().json(jsonEmployee))
 						.andExpect(status().isOk());
 
-		Mockito.verify(service).getEmployeeById(Long.getLong("10"));
+		Mockito.verify(service).getEmployeeById(10L);
 	}
 
 	@Test
 	public void createEmployee() throws Exception {
-		Employee toCreate = new Employee(Long.getLong("11"), "Didier", "Drogba", "didi@drogba.com");
+		Employee toCreate = new Employee(11L, "Didier", "Drogba", "didi@drogba.com");
+		Mockito.when(service.createEmployee(toCreate)).thenReturn(toCreate);
 		String toCreatejson = mapper.writeValueAsString(toCreate);
 
 		mockMvc.perform(post(serviceUri)
 						.content(toCreatejson)
 						.contentType(MediaType.APPLICATION_JSON_VALUE))
-						.andExpect(status().isOk());
+						.andExpect(status().isOk())
+						.andExpect(content().json(toCreatejson));
 
 		Mockito.verify(service).createEmployee(toCreate);
+	}
+
+	@Test
+	public void updateEmployee() throws Exception {
+		employee.setFirstName("lio@afa.com");
+		Employee toUpdate = new Employee(null, null, null, "lio@afa.com");
+
+		Mockito.when(service.updateEmployee(10L, toUpdate)).thenReturn(employee);
+
+		String toUpdateString =  mapper.writeValueAsString(toUpdate);
+		String expectedToJson = mapper.writeValueAsString(employee);
+
+		mockMvc.perform(patch(serviceUri + "{idEmployee}", 10L)
+							.content(toUpdateString)
+							.contentType(MediaType.APPLICATION_JSON_VALUE))
+							.andExpect(content().json(expectedToJson))
+							.andExpect(status().isOk());
+
+		Mockito.verify(service).updateEmployee(10L, toUpdate);
+	}
+
+	@Test
+	public void deleteEmployee() throws Exception {
+		mockMvc.perform(delete(serviceUri + "{idEmployee}", 10L))
+						.andExpect(status().isOk());
+		Mockito.verify(service).deleteEmployee(10L);
 	}
 }

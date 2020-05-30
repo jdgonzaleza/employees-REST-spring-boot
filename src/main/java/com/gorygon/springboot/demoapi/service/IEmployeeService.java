@@ -12,5 +12,5 @@ public interface IEmployeeService {
 	public Employee getEmployeeById(Long id);
 	public Employee createEmployee(Employee employee);
 	public Employee updateEmployee(Long id, Employee employee);
-	public ResponseEntity<?> deleteEmployee(Long id, Employee employee);
+	public ResponseEntity<?> deleteEmployee(Long id);
 }
