@@ -9,7 +9,7 @@ jobs:
       - image: circleci/postgres:9.6.3-alpine
         environment:
           POSTGRES_USER: root
-          POSTGRES_DB: cicreci_test
+          POSTGRES_DB: circleci_test
 
     steps:
 
