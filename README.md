@@ -1,5 +1,5 @@
-# Employee CRUD REST API
-Simple Rest API that displays a way of constructing and designing a simple Spring boot REST API.
+# Employee CRUD REST API [![CI](https://circleci.com/gh/CircleCI-Public/circleci-demo-java-spring.svg?style=shield&circle-token=:circle-token)](https://app.circleci.com/pipelines/github/jdgonzaleza/employees-REST-spring-boot)
+Simple Rest API developed using Spring boot and postgres.
 In this case, we decided to create an API that manages employees information
 
 ### Main Technologies

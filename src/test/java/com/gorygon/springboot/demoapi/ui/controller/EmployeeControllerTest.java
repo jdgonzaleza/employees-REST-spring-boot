@@ -1,27 +1,25 @@
-package com.gorygon.springboot.demoapi.controller;
+package com.gorygon.springboot.demoapi.ui.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gorygon.springboot.demoapi.controller.EmployeeController;
 import com.gorygon.springboot.demoapi.model.Employee;
-import com.gorygon.springboot.demoapi.service.IEmployeeService;
-import org.apache.catalina.connector.Response;
+import com.gorygon.springboot.demoapi.service.EmployeeService;
+import com.gorygon.springboot.demoapi.ui.model.EmployeeToRest;
+import com.gorygon.springboot.demoapi.util.RestControllerTestFixture;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.http.server.reactive.MockServerHttpResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -33,9 +31,11 @@ public class EmployeeControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@MockBean
-	private IEmployeeService service;
+	private EmployeeService service;
 	private List<Employee> employeeList;
+	private List<EmployeeToRest> employeeListToRest;
 	private Employee employee;
+	private EmployeeToRest employeeToRest;
 	private String serviceUri;
 
 	@Autowired
@@ -43,14 +43,22 @@ public class EmployeeControllerTest {
 	private String jsonEmployeeList;
 	private String jsonEmployee;
 
+
 	@Before
 	public void setup() throws JsonProcessingException {
 		employee = new Employee(10L, "Lio", "Messi", "lio@messi.com");
+
+		employeeToRest = RestControllerTestFixture.EmployeeToDTO(employee);
+
 		employeeList = Arrays.asList( new Employee(1L,"Juan", "Gonzalez", "juan@gonzalez.com"),
 						new Employee(2L, "Diego", "Arteta", "Diego@arteta.com"));
+
+		employeeListToRest = employeeList.stream()
+						.map( employee -> RestControllerTestFixture.EmployeeToDTO(employee)).collect(Collectors.toList());
+
 		serviceUri = "/api/employees/";
-		jsonEmployeeList = mapper.writeValueAsString(employeeList);
-		jsonEmployee = mapper.writeValueAsString(employee);
+		jsonEmployeeList = mapper.writeValueAsString(employeeListToRest);
+		jsonEmployee = mapper.writeValueAsString(employeeToRest);
 	}
 
 	@Test
@@ -92,6 +100,7 @@ public class EmployeeControllerTest {
 
 	@Test
 	public void updateEmployee() throws Exception {
+
 		employee.setFirstName("lio@afa.com");
 		Employee toUpdate = new Employee(null, null, null, "lio@afa.com");
 

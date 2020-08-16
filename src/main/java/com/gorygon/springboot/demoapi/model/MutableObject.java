@@ -1,5 +1,5 @@
 package com.gorygon.springboot.demoapi.model;
 
-public interface GoryObject<T> {
+public interface MutableObject<T> {
 	public T mergeForUpdate( T dbObject );
 }
