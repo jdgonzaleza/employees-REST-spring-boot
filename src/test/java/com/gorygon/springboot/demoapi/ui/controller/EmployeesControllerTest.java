@@ -26,8 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = EmployeeController.class)
-public class EmployeeControllerTest {
+@WebMvcTest(value = EmployeesController.class)
+public class EmployeesControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@MockBean
@@ -121,7 +121,7 @@ public class EmployeeControllerTest {
 	@Test
 	public void deleteEmployee() throws Exception {
 		mockMvc.perform(delete(serviceUri + "{idEmployee}", 10L))
-						.andExpect(status().isOk());
+						.andExpect(status().isNoContent());
 		Mockito.verify(service).deleteEmployee(10L);
 	}
 }

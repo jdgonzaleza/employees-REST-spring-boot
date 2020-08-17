@@ -14,14 +14,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/employees/")
-public class EmployeeController extends AbstractRestController<EmployeeToRest, Employee> {
+public class EmployeesController extends AbstractRestController<EmployeeToRest, Employee> {
 
 	@Autowired
 	EmployeeService employeeService;
 
 	@PostMapping("")
-	public Employee createEmployee(@Valid @RequestBody Employee employee) {
-		return employeeService.createEmployee(employee);
+	public Employee createEmployee(@Valid @RequestBody EmployeeToRest employee) {
+		return employeeService.createEmployee(toEntity(employee));
 	}
 
 	@GetMapping("")
@@ -40,15 +40,16 @@ public class EmployeeController extends AbstractRestController<EmployeeToRest, E
 	}
 
 	@PatchMapping("{idEmployee}")
-	public ResponseEntity<EmployeeToRest> updateEmployee(@PathVariable(value = "idEmployee") Long idEmployee, @RequestBody Employee employee) {
-		EmployeeToRest updatedEmployee = toRest(employeeService.updateEmployee(idEmployee, employee));
+	public ResponseEntity<EmployeeToRest> updateEmployee(@PathVariable(value = "idEmployee") Long idEmployee, @RequestBody EmployeeToRest employee) {
+		EmployeeToRest updatedEmployee = toRest(employeeService.updateEmployee(idEmployee, toEntity(employee)));
 
 		return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
 	}
 
 	@DeleteMapping("{idEmployee}")
 	public ResponseEntity<?> deleteEmployee(@PathVariable(value = "idEmployee") Long idEmployee) {
-		return employeeService.deleteEmployee(idEmployee);
+		employeeService.deleteEmployee(idEmployee);
+		return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 	}
 
 	@Override

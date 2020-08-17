@@ -16,11 +16,11 @@ public class Employee implements Serializable, MutableObject<Employee> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name = "firstName")
+	@Column(nullable = false, length = 50)
 	private String firstName;
-	@Column(name = "lastName")
+	@Column(nullable = false, length = 50)
 	private String lastName;
-	@Column(name = "email")
+	@Column(nullable = false, length = 120, unique = true)
 	private String email;
 
 	@Override
